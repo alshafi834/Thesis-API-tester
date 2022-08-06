@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1657657060423" clover="3.2.0">
+  <project timestamp="1657657060423" name="All files">
+    <metrics statements="28" coveredstatements="28" conditionals="0" coveredconditionals="0" methods="14" coveredmethods="14" elements="42" coveredelements="42" complexity="0" loc="28" ncloc="28" packages="4" files="6" classes="6"/>
+    <package name="components.JobSearch">
+      <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+      <file name="Headline.vue" path="/Users/aalshafi/Documents/pet p/vue/masterproject/src/components/JobSearch/Headline.vue">
+        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="20" count="4" type="stmt"/>
+        <line num="27" count="7" type="stmt"/>
+        <line num="33" count="4" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="40" count="4" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="42" count="3" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.Navigation">
+      <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="5"/>
+      <file name="MainNav.vue" path="/Users/aalshafi/Documents/pet p/vue/masterproject/src/components/Navigation/MainNav.vue">
+        <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
+        <line num="42" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="45" count="1" type="stmt"/>
+        <line num="53" count="5" type="stmt"/>
+        <line num="69" count="7" type="stmt"/>
+        <line num="77" count="2" type="stmt"/>
+      </file>
+      <file name="ProfileAvatar.vue" path="/Users/aalshafi/Documents/pet p/vue/masterproject/src/components/Navigation/ProfileAvatar.vue">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+      </file>
+      <file name="SubNav.vue" path="/Users/aalshafi/Documents/pet p/vue/masterproject/src/components/Navigation/SubNav.vue">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.Shared">
+      <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+      <file name="ActionButton.vue" path="/Users/aalshafi/Documents/pet p/vue/masterproject/src/components/Shared/ActionButton.vue">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="20" count="7" type="stmt"/>
+        <line num="26" count="2" type="stmt"/>
+      </file>
+    </package>
+    <package name="utils">
+      <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+      <file name="nextElementInList.js" path="/Users/aalshafi/Documents/pet p/vue/masterproject/src/utils/nextElementInList.js">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="2" count="5" type="stmt"/>
+        <line num="3" count="5" type="stmt"/>
+        <line num="4" count="5" type="stmt"/>
+        <line num="5" count="5" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

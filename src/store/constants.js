@@ -1,0 +1,17 @@
+/* Users */
+export const LOGIN_USER = "LOGIN_USER";
+
+/* Jobs */
+export const RECEIVE_JOBS = "RECEIVE_JOBS";
+export const FETCH_JOBS = "FETCH_JOBS";
+
+/* Organizations */
+export const UNIQUE_ORGANIZATIONS = "UNIQUE_ORGANIZATIONS";
+export const ADD_SELECTED_ORGANIZATIONS = "ADD_SELECTED_ORGANIZATIONS";
+export const FILTERED_JOBS_BY_ORGANIZATIONS = "FILTERED_JOBS_BY_ORGANIZATIONS";
+
+/* Fetch APIs */
+export const FETCH_APIS = "FETCH_APIS";
+export const RECEIVE_APIS = "RECEIVE_APIS";
+export const SELECT_ENDPOINT = "SELECT_ENDPOINT";
+export const SET_PARAMETERS = "SET_PARAMETERS";
