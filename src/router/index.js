@@ -9,6 +9,8 @@ const TeamsView = () =>
   import(/* webpackChunkName: "jobs" */ "@/views/TeamsView.vue");
 const ApisView = () =>
   import(/* webpackChunkName: "jobs" */ "@/views/ApisView.vue");
+const ApiScannerView = () =>
+  import(/* webpackChunkName: "jobs" */ "@/views/ApiScannerView.vue");
 
 const routes = [
   {
@@ -30,6 +32,11 @@ const routes = [
     path: "/documentation",
     name: "DocView",
     component: TeamsView,
+  },
+  {
+    path: "/apiscanner",
+    name: "ApiScannerView",
+    component: ApiScannerView,
   },
   {
     path: "/apis",

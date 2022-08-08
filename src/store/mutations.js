@@ -5,6 +5,7 @@ import {
   RECEIVE_APIS,
   SELECT_ENDPOINT,
   SET_PARAMETERS,
+  SET_API_PATHS,
 } from "@/store/constants";
 
 const mutations = {
@@ -33,6 +34,9 @@ const mutations = {
       acc[key].push(obj);
       return acc;
     }, {});
+  },
+  [SET_API_PATHS](state, apiInfo) {
+    state.apis = apiInfo;
   },
 };
 

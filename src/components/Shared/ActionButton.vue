@@ -1,5 +1,5 @@
 <template>
-  <button :class="buttonClass">
+  <button :class="buttonClass" :disabled="disabled">
     {{ text }}
   </button>
 </template>
@@ -20,6 +20,11 @@ export default {
         return ["primary", "secondary"].includes(value);
       },
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   computed: {
     buttonClass() {
@@ -36,9 +41,9 @@ button {
   @apply px-5 py-3 font-medium;
 }
 .primary {
-  @apply text-white rounded bg-brand-blue-1 hover:shadow-blue;
+  @apply text-white rounded bg-brand-blue-1 hover:shadow-blue disabled:opacity-25;
 }
 .secondary {
-  @apply text-brand-blue-1 bg-transparent hover:text-white hover:bg-brand-blue-2;
+  @apply text-brand-blue-1 bg-transparent hover:text-white hover:bg-brand-blue-2 disabled:opacity-25;
 }
 </style>

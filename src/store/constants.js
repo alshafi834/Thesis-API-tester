@@ -15,3 +15,4 @@ export const FETCH_APIS = "FETCH_APIS";
 export const RECEIVE_APIS = "RECEIVE_APIS";
 export const SELECT_ENDPOINT = "SELECT_ENDPOINT";
 export const SET_PARAMETERS = "SET_PARAMETERS";
+export const SET_API_PATHS = "SET_API_PATHS";

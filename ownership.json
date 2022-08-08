@@ -1,0 +1,801 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "The Ownership API for the trivago Studio platform. The Ownership API keeps track of who can use what. More concrete which advertiser can use what application(s). This API allows you to create and manage these links between the advertisers and the applications. Moreover, this API keeps track of the link's changes and offers endpoints for listing the history of such links.The terms advertiser and organisation are the same thing, but advertiser is kept due to legacy reasons.\n\nThe endpoints listed below have implemented the authentication and authorization protocols of the trivago Studio platform. Therefore, it is required for all endpoints to have a JWT Token in the HTTP X-Studio-Authorization header using the Bearer Authentication scheme. For further information about the JWT token, please refer to the Studio client documentation.\n\nIn case errors may appear, like the 500's, this API describes them using the ErrorProblem Model.",
+    "version": "1",
+    "title": "trivago Studio Ownership API"
+  },
+  "host": "http://master.studio-sandbox.trv.cloud",
+  "schemes": ["${HOSTED_ZONE_PROTOCOL}"],
+  "basePath": "/ar-studio-ownership-api",
+  "tags": [
+    {
+      "name": "Ownership",
+      "description": "Central point for managing the ownership of an application for a given advertiser"
+    },
+    {
+      "name": "Recommendation",
+      "description": "Central point for managing recommendations"
+    },
+    {
+      "name": "Reports",
+      "description": "API to download reports regarding App Ownerships"
+    }
+  ],
+  "paths": {
+    "/ownerships": {
+      "get": {
+        "tags": ["Ownership"],
+        "summary": "Gets all the ownerships available",
+        "operationId": "getAllUsingGET",
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "name": "application",
+            "in": "query",
+            "description": "Application's ID in form of a UUID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "organisation",
+            "in": "query",
+            "description": "Organization's ID in form of a UUID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "The ownership's status",
+            "required": false,
+            "type": "string",
+            "enum": ["VALID", "EXPIRED"]
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "Defines what the entity returned should additionally include over the predefined model.",
+            "required": false,
+            "type": "string",
+            "enum": ["history"]
+          },
+          {
+            "name": "accommodation",
+            "in": "query",
+            "description": "Queries the returned ownership respect to the specified accommodation.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pricePlan",
+            "in": "query",
+            "description": "Price plan ID in form of a UUID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Results page you want to retrieve (0..N)",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of records per page",
+            "required": false,
+            "type": "integer",
+            "default": 20,
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request received and an entity is returned",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Ownership"
+              }
+            }
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Internal": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Ownership"],
+        "summary": "Creates an ownership between an application, a product and an advertiser",
+        "description": "When an advertiser wishes to own a product, first an ownership has to be created.\n\nOn creation, the ownership is automatically validated.\n\nThis endpoint requires an Internal token.",
+        "operationId": "ownUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "criteria",
+            "description": "criteria",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OwnershipCriteria"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The entity was created",
+            "schema": {
+              "$ref": "#/definitions/Ownership"
+            }
+          },
+          "400": {
+            "description": "The request was invalid",
+            "schema": {
+              "$ref": "#/definitions/ValidationErrorModel"
+            }
+          },
+          "401": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "422": {
+            "description": "The entity requested already exists",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "500": {
+            "description": "Sadly we have an internal server error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Internal": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Ownership"],
+        "summary": "Invalidates the ownerships of an advertiser (organisation)",
+        "description": "Once an ownership between an advertiser (organisation) ask to be deleted, this endpoint can be used to explicitly invalidate all its ownerships. Once an ownership is invalidated the advertiser won't we able to use the application by any means. This transaction will be tracked and added to the ownership's history.\n\nThis endpoint requires the use of a GDPR authentication token.",
+        "operationId": "deleteOwnerships_1",
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "name": "organisation_id",
+            "in": "body",
+            "type": "string",
+            "example": "00000000-0000-4000-A000-000000000000",
+            "description": "The organisation UUID from which to remove the ownership."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The request was processed but has not content"
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "404": {
+            "description": "The requested resource was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "422": {
+            "description": "The request was unable to be processed due to entity conflicts",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "500": {
+            "description": "Sadly we have an internal server error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Gdpr": []
+          }
+        ]
+      }
+    },
+    "/ownerships/{ownership_id}": {
+      "get": {
+        "tags": ["Ownership"],
+        "summary": "Gets the ownership requested",
+        "operationId": "getUsingGET",
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "name": "include",
+            "in": "query",
+            "description": "Defines what the entity returned should additionally include over the predefined model.",
+            "required": false,
+            "type": "string",
+            "enum": ["history"]
+          },
+          {
+            "name": "organisation",
+            "in": "query",
+            "description": "Organization's ID in form of a UUID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ownership_id",
+            "in": "path",
+            "description": "ID of the entity",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request received and an entity is returned",
+            "schema": {
+              "$ref": "#/definitions/Ownership"
+            }
+          },
+          "400": {
+            "description": "The request was invalid",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "404": {
+            "description": "The requested resource was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "500": {
+            "description": "Sadly we have an internal server error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Internal": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Ownership"],
+        "summary": "Validates an ownership",
+        "description": "Once an ownership is invalidated, an ownership can be validated again. Since the state of the ownership is binary, the PUT method will always validate an existing ownership. This transaction will be tracked and added to the ownership's history. \n\nThis endpoint requires ADMIN role. ",
+        "operationId": "validateUsingPUT",
+        "consumes": ["application/json"],
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "name": "ownership_id",
+            "in": "path",
+            "description": "ID of the entity",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "organisationCriteria",
+            "description": "organisationCriteria",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrganisationCriteria"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request received and an entity is returned",
+            "schema": {
+              "$ref": "#/definitions/Ownership"
+            }
+          },
+          "400": {
+            "description": "The request was invalid",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "404": {
+            "description": "The requested resource was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "500": {
+            "description": "Sadly we have an internal server error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Ownership"],
+        "summary": "Invalidates the ownership of an application and an advertiser (organisation)",
+        "description": "Once an ownership between an advertiser (organisation) and an application is no longer valid, this endpoint can be used to explicitly invalidate the ownership between them. Once an ownership is invalidated the advertiser won't we able to use the application by any means. This transaction will be tracked and added to the ownership's history.\n\nThe ownership_id needs to be passed as a path parameter and the organisation_id also needs to be passed in the request body as a JSON payload.",
+        "operationId": "deleteOwnership_1",
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "organisationCriteria",
+            "description": "organisationCriteria",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrganisationCriteria"
+            }
+          },
+          {
+            "name": "ownership_id",
+            "in": "path",
+            "description": "ID of the entity",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The request was processed but has not content"
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "404": {
+            "description": "The requested resource was not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "422": {
+            "description": "The request was unable to be processed due to entity conflicts",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          },
+          "500": {
+            "description": "Sadly we have an internal server error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Internal": []
+          }
+        ]
+      }
+    },
+    "/recommendations/products": {
+      "get": {
+        "tags": ["Recommendation"],
+        "summary": "Gets all the product recommendations for an organisation",
+        "operationId": "getAllProductRecommendationsUsingGET",
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "name": "accommodationId",
+            "in": "query",
+            "description": "ID of an item/hotel/accommodation",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "organisation",
+            "in": "query",
+            "description": "Organization's ID in form of a UUID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "description": "Defines what the entity returned should additionally include over the predefined model.",
+            "required": false,
+            "type": "string",
+            "enum": ["history"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request received and an entity is returned",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProductRecommendation"
+              }
+            }
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/reports/ownerships": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "Gets the App Ownerships Report",
+        "operationId": "downloadAllOwnershipsUsingGET",
+        "produces": ["text/csv;charset=UTF-8"],
+        "parameters": [
+          {
+            "name": "X-Studio-Internal-Authentication",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested report as an attachment in the response"
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "X-Studio-Authorization",
+      "in": "header"
+    },
+    "Internal": {
+      "type": "apiKey",
+      "name": "X-Studio-Internal-Authorization",
+      "in": "header"
+    },
+    "Gdpr": {
+      "type": "apiKey",
+      "name": "X-Studio-Gdpr-Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "ErrorProblem": {
+      "type": "object",
+      "properties": {
+        "detail": {
+          "type": "string",
+          "description": "A human readable explanation specific to this occurrence of the problem."
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The HTTP status code generated by the origin server for this occurrence of the problem."
+        },
+        "title": {
+          "type": "string",
+          "description": "A short, human-readable summary of the problem type"
+        }
+      },
+      "title": "ErrorProblem"
+    },
+    "OrganisationCriteria": {
+      "type": "object",
+      "required": ["organisation_id"],
+      "properties": {
+        "organisation_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The organisation UUID from which to remove the ownership."
+        },
+        "user_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The user UUID that is responsible for removing the ownership."
+        }
+      },
+      "title": "OrganisationCriteria"
+    },
+    "Ownership": {
+      "type": "object",
+      "properties": {
+        "accommodation_id": {
+          "type": "integer",
+          "format": "int32",
+          "example": 147689,
+          "description": "The accommodation ID from the ownership"
+        },
+        "advertiser_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The advertiser's ID to link the application to."
+        },
+        "app_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The application's ID from the ownership"
+        },
+        "price_plan_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The price plan ID from the ownership"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100,
+          "description": "The quantity associated to the price plan"
+        },
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1521563887,
+          "description": "Timestamp for when the model was created on"
+        },
+        "history": {
+          "type": "array",
+          "description": "The Ownership model does not include the history by default, to include it, use the 'include' argument in the endpoints that support it.",
+          "items": {
+            "$ref": "#/definitions/OwnershipHistory"
+          }
+        },
+        "id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "ID of the entity"
+        },
+        "product_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The product ID this ownership is associated with. Can change based on the type of product (bundle or single application) that was bought."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["VALID", "EXPIRED"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["FREE", "PAID"]
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1521563887,
+          "description": "Timestamp for when the model was last updated"
+        }
+      },
+      "title": "Ownership",
+      "description": "Ownership interface"
+    },
+    "OwnershipCriteria": {
+      "type": "object",
+      "required": [
+        "accommodation_id",
+        "product_id",
+        "app_id",
+        "price_plan_id",
+        "organization_id",
+        "user_id"
+      ],
+      "properties": {
+        "accommodation_id": {
+          "type": "integer",
+          "format": "int32",
+          "example": 147689,
+          "description": "ID of the hotel/accommodation"
+        },
+        "app_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "UUID of the application"
+        },
+        "product_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "ID of the product (bundle or single application)"
+        },
+        "price_plan_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "ID of the price plan for the given product"
+        },
+        "organization_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "ID of the organization"
+        },
+        "user_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "ID of the user"
+        },
+        "quantity": {
+          "type": "integer",
+          "example": "10",
+          "description": "Quantity of units for the given price plan"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["FREE", "PAID"],
+          "example": "FREE"
+        }
+      },
+      "title": "OwnershipCriteria"
+    },
+    "OwnershipHistory": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1521563887,
+          "description": "Timestamp for when the model was created on"
+        },
+        "created_by": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "User (ID) that made the changes to the ownership. This is extracted from the request token."
+        },
+        "id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "ID of the entity"
+        },
+        "price_plan_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "example": 100
+        },
+        "ownership": {
+          "description": "The OwnershipHistory model does not include the Ownership model by default, to include it, use the 'include' argument in the endpoints that support it.",
+          "$ref": "#/definitions/Ownership"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["VALID", "EXPIRED"]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["FREE", "PAID"]
+        },
+        "updated_at": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1521563887,
+          "description": "Timestamp for when the model was last updated"
+        }
+      },
+      "title": "OwnershipHistory",
+      "description": "Ownership history interface"
+    },
+    "ProductRecommendation": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The product ID"
+        }
+      },
+      "title": "ProductRecommendation",
+      "description": "A product recommendation"
+    },
+    "Recommendation": {
+      "type": "object",
+      "properties": {
+        "app_id": {
+          "type": "string",
+          "example": "00000000-0000-4000-A000-000000000000",
+          "description": "The app ID"
+        }
+      },
+      "title": "Recommendation",
+      "description": "An app recommendation"
+    },
+    "ValidationErrorModel": {
+      "type": "object",
+      "properties": {
+        "detail": {
+          "type": "string",
+          "description": "A human readable explanation specific to this occurrence of the problem."
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The HTTP status code generated by the origin server for this occurrence of the problem."
+        },
+        "title": {
+          "type": "string",
+          "description": "A short, human-readable summary of the problem type"
+        },
+        "violations": {
+          "type": "array",
+          "description": "A list of violations with a short, human-readable summary of the violations.",
+          "items": {
+            "$ref": "#/definitions/ViolationDetailModel"
+          }
+        }
+      },
+      "title": "ValidationErrorModel"
+    },
+    "ViolationDetailModel": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "The field that violates the schema."
+        },
+        "message": {
+          "type": "string",
+          "description": "A short, human-readable message of the violation."
+        }
+      },
+      "title": "ViolationDetailModel"
+    }
+  }
+}

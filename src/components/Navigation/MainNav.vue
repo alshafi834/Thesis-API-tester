@@ -58,6 +58,7 @@ export default {
       menuItems: [
         { text: "Documentation", url: "/documentation" },
         /* { text: "Jobs", url: "/jobs/results" }, */
+        { text: "API Scanner", url: "/apiscanner" },
         { text: "Apis", url: "/apis" },
       ],
     };

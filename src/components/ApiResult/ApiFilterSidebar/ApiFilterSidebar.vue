@@ -11,7 +11,7 @@
       </div>
     </section>
     <ul>
-      <li v-for="(api, name) in apis" :key="name">
+      <li v-for="(api, name) in apis.paths" :key="name">
         <accordion :header="name">
           <ul>
             <li
@@ -32,20 +32,20 @@
 <script>
 import ActionButton from "../../Shared/ActionButton.vue";
 import Accordion from "../../Shared/Accordion.vue";
-import { FETCH_APIS, SELECT_ENDPOINT, SET_PARAMETERS } from "@/store/constants";
-import { mapActions, mapState, mapMutations } from "vuex";
+import { SELECT_ENDPOINT, SET_PARAMETERS } from "@/store/constants";
+import { mapState, mapMutations } from "vuex";
 export default {
   name: "ApiFilterSidebar",
   components: { ActionButton, Accordion },
   computed: {
     ...mapState(["apis"]),
   },
-  async mounted() {
+  /* async mounted() {
     //this.$store.dispatch(FETCH_JOBS);
     this.FETCH_APIS();
-  },
+  }, */
   methods: {
-    ...mapActions([FETCH_APIS]),
+    //...mapActions([FETCH_APIS]),
     ...mapMutations([SELECT_ENDPOINT]),
     ...mapMutations([SET_PARAMETERS]),
     selectEndpoint(endpoint) {
