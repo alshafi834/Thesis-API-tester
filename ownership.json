@@ -5,7 +5,7 @@
     "version": "1",
     "title": "trivago Studio Ownership API"
   },
-  "host": "http://master.studio-sandbox.trv.cloud",
+  "host": "https://master.studio-sandbox.trv.cloud",
   "schemes": ["${HOSTED_ZONE_PROTOCOL}"],
   "basePath": "/ar-studio-ownership-api",
   "tags": [
@@ -23,6 +23,38 @@
     }
   ],
   "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Gets the Health update of ownership api",
+        "operationId": "getHealthUpdateOwnershipAPI",
+        "produces": ["application/json;charset=UTF-8"],
+        "parameters": [
+          {
+            "name": "hlth",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested report as an attachment in the response"
+          },
+          "403": {
+            "description": "The request can't be processed due to an invalid authorization token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorProblem"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
     "/ownerships": {
       "get": {
         "tags": ["Ownership"],
@@ -34,6 +66,20 @@
             "name": "application",
             "in": "query",
             "description": "Application's ID in form of a UUID",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "X-Studio-Internal-Authentication",
+            "in": "header",
+            "description": "internal token in header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "X-Studio-Authorization",
+            "in": "header",
+            "description": "Studio token",
             "required": false,
             "type": "string"
           },
@@ -186,6 +232,13 @@
             "type": "string",
             "example": "00000000-0000-4000-A000-000000000000",
             "description": "The organisation UUID from which to remove the ownership."
+          },
+          {
+            "name": "X-Studio-Internal-Authentication",
+            "in": "header",
+            "description": "internal token in header",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {

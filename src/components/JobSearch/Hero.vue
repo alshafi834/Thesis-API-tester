@@ -17,7 +17,7 @@
         <div class="col-start-12 col-span-1"></div>
       </div>
     </section>
-    <spotlight class="flex flex-row justify-center pb-16">
+    <!-- <spotlight class="flex flex-row justify-center pb-16">
       <template #default="{ img, title, description }">
         <router-link
           to="/jobs/results"
@@ -38,16 +38,16 @@
           >
         </router-link>
       </template>
-    </spotlight>
+    </spotlight> -->
   </main>
 </template>
 
 <script>
 import Headline from "./Headline.vue";
 //import JobSearchForm from "./JobSearchForm.vue";
-import Spotlight from "./Spotlight.vue";
+//import Spotlight from "./Spotlight.vue";
 export default {
   name: "Hero",
-  components: { Headline, Spotlight },
+  components: { Headline },
 };
 </script>

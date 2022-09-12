@@ -18,7 +18,7 @@
               v-for="(endpoint, endpointName) in api"
               :key="endpointName"
               class="mt-2 p-1 border border-solid rounded bg-brand-gray-2 cursor-pointer"
-              @click="selectEndpoint(endpoint)"
+              @click="selectEndpoint(endpoint, name, endpointName)"
             >
               {{ endpointName }}
             </li>
@@ -32,7 +32,11 @@
 <script>
 import ActionButton from "../../Shared/ActionButton.vue";
 import Accordion from "../../Shared/Accordion.vue";
-import { SELECT_ENDPOINT, SET_PARAMETERS } from "@/store/constants";
+import {
+  SELECT_ENDPOINT,
+  SET_PARAMETERS,
+  SET_RESPONSES,
+} from "@/store/constants";
 import { mapState, mapMutations } from "vuex";
 export default {
   name: "ApiFilterSidebar",
@@ -48,13 +52,18 @@ export default {
     //...mapActions([FETCH_APIS]),
     ...mapMutations([SELECT_ENDPOINT]),
     ...mapMutations([SET_PARAMETERS]),
-    selectEndpoint(endpoint) {
-      this.SELECT_ENDPOINT(endpoint);
+    ...mapMutations([SET_RESPONSES]),
+    selectEndpoint(endpoint, endpointUrl, endpointType) {
+      let endpointDetails = {};
+      endpointDetails.details = endpoint;
+      endpointDetails.path = endpointUrl;
+      endpointDetails.type = endpointType;
+      this.SELECT_ENDPOINT(endpointDetails);
       this.SET_PARAMETERS(endpoint.parameters);
+      this.SET_RESPONSES(endpoint.responses);
     },
   },
 };
 </script>
 
 <style></style>
-,

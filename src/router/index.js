@@ -11,6 +11,10 @@ const ApisView = () =>
   import(/* webpackChunkName: "jobs" */ "@/views/ApisView.vue");
 const ApiScannerView = () =>
   import(/* webpackChunkName: "jobs" */ "@/views/ApiScannerView.vue");
+const AuthView = () =>
+  import(/* webpackChunkName: "jobs" */ "@/views/AuthView.vue");
+const MyTestsView = () =>
+  import(/* webpackChunkName: "jobs" */ "@/views/MyTestsView.vue");
 
 const routes = [
   {
@@ -42,6 +46,16 @@ const routes = [
     path: "/apis",
     name: "ApisView",
     component: ApisView,
+  },
+  {
+    path: "/auth",
+    name: "AuthView",
+    component: AuthView,
+  },
+  {
+    path: "/mytests",
+    name: "MyTestsView",
+    component: MyTestsView,
   },
 ];
 

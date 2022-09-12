@@ -6,6 +6,9 @@ const state = () => {
     apis: [],
     apiDetails: {},
     parameters: [],
+    responses: {},
+    fullRequest: {},
+    fullResponse: {},
   };
 };
 

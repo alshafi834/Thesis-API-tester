@@ -1,5 +1,6 @@
 /* Users */
 export const LOGIN_USER = "LOGIN_USER";
+export const LOGOUT_USER = "LOGOUT_USER";
 
 /* Jobs */
 export const RECEIVE_JOBS = "RECEIVE_JOBS";
@@ -15,4 +16,8 @@ export const FETCH_APIS = "FETCH_APIS";
 export const RECEIVE_APIS = "RECEIVE_APIS";
 export const SELECT_ENDPOINT = "SELECT_ENDPOINT";
 export const SET_PARAMETERS = "SET_PARAMETERS";
+export const SET_RESPONSES = "SET_RESPONSES";
 export const SET_API_PATHS = "SET_API_PATHS";
+export const UPDATE_PARAMETERS = "UPDATE_PARAMETERS";
+export const SET_FULL_REQUEST = "SET_FULL_REQUEST";
+export const SET_FULL_RESPONSES = "SET_FULL_RESPONSES";

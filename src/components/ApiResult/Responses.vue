@@ -1,15 +1,9 @@
 <template>
   <div class="w-full border rounded mt-4 p-4">
     <accordion header="Response" :is-open-prop="true">
-      <div>
-        <div v-for="(response, name) in apiDetails.responses" :key="name">
-          <h2>{{ name }}</h2>
-          <div>
-            <pre v-highlightjs><code class="language-html">
-                {
-                    description: {{response.description}}
-                }</code></pre>
-          </div>
+      <div v-if="apiDetails">
+        <div v-for="(response, name) in apiDetails" :key="name" class="mb-4">
+          <p>{{ name }}: {{ response.description }}</p>
         </div>
       </div>
     </accordion>
@@ -17,16 +11,27 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { useStore } from "vuex";
 import Accordion from "@/components/Shared/Accordion.vue";
+import { computed } from "@vue/runtime-core";
 export default {
   name: "Response",
   components: {
     Accordion,
   },
-  computed: {
-    ...mapState(["apiDetails"]),
+  setup() {
+    const store = useStore();
+    //let baseUrl = ref("");
+    const apiDetails = computed(() => store.state.responses);
+    console.log(apiDetails);
+
+    return {
+      apiDetails,
+    };
   },
+  /* computed: {
+    ...mapState(["apiDetails"]),
+  }, */
 };
 </script>
 
