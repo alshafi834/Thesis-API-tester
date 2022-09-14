@@ -48,7 +48,21 @@
         {{ msgs }}
       </p>
     </div>
-    <action-button text="Save test" @click="testSaver" />
+    <div
+      v-if="passed"
+      class="border-2 mt-6 p-6 flex justify-between bg-white items-center"
+    >
+      <div>
+        <label for="testname">Test name: </label>
+        <input
+          id="testname"
+          v-model="testName"
+          class="border-2 rounded p-2"
+          type="text"
+        />
+      </div>
+      <action-button text="Save test" @click="testSaver" />
+    </div>
   </div>
 </template>
 
@@ -127,11 +141,13 @@ export default defineComponent({
     };
     //const testNumber = ref([]);
     const store = useStore();
+    const testName = ref("");
     const testSaver = async () => {
       let body = {
         request: JSON.stringify(store.state.fullRequest),
         atmn_tests: JSON.stringify(automationTests.value),
-        test_name: "mytest",
+        test_name: testName.value,
+        api_name: store.state.apis.info.title,
       };
       const apRes = await saveTest(body);
       console.log(apRes);
@@ -150,6 +166,7 @@ export default defineComponent({
       createTest,
       automationTests,
       testSaver,
+      testName,
     };
   },
 });

@@ -11,8 +11,10 @@ import {
   UPDATE_PARAMETERS,
   SET_FULL_REQUEST,
   SET_FULL_RESPONSES,
+  SET_MY_TESTS,
 } from "@/store/constants";
 import { useRouter } from "vue-router";
+import { SET_TEST_DETAILS } from "./constants";
 
 const mutations = {
   [LOGIN_USER](state) {
@@ -66,6 +68,12 @@ const mutations = {
   },
   [SET_FULL_RESPONSES](state, res) {
     state.fullResponse = res;
+  },
+  [SET_MY_TESTS](state, tests) {
+    state.myTests = tests;
+  },
+  [SET_TEST_DETAILS](state, detail) {
+    state.testDetails = detail;
   },
 };
 

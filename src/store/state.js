@@ -9,6 +9,8 @@ const state = () => {
     responses: {},
     fullRequest: {},
     fullResponse: {},
+    myTests: [],
+    testDetails: {},
   };
 };
 
