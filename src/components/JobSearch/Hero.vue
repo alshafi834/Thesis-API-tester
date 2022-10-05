@@ -16,6 +16,16 @@
         </div>
         <div class="col-start-12 col-span-1"></div>
       </div>
+      <div class="flex justify-center">
+        <router-link to="/auth">
+          <button
+            v-if="!isLoggedIn"
+            class="px-8 py-4 border-2 rounded border-brand-blue-1 hover:bg-blue-400 hover:text-white"
+          >
+            Sign In to start testing your API
+          </button>
+        </router-link>
+      </div>
     </section>
     <!-- <spotlight class="flex flex-row justify-center pb-16">
       <template #default="{ img, title, description }">
@@ -43,11 +53,20 @@
 </template>
 
 <script>
+import { computed } from "@vue/runtime-core";
+import { useStore } from "vuex";
 import Headline from "./Headline.vue";
 //import JobSearchForm from "./JobSearchForm.vue";
 //import Spotlight from "./Spotlight.vue";
 export default {
   name: "Hero",
   components: { Headline },
+  setup() {
+    const store = useStore();
+    const isLoggedIn = computed(() => store.state.isLoggedIn);
+    return {
+      isLoggedIn,
+    };
+  },
 };
 </script>

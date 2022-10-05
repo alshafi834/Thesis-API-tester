@@ -147,7 +147,12 @@
       <pre class="text-sm">{{ response }}</pre>
     </div>
   </div>
-  <response-tester :status="responseStatus" :response="response" />
+  <response-tester
+    :status="responseStatus"
+    :response="response"
+    :length="contentLength"
+    :type="contentType"
+  />
 </template>
 
 <script>
@@ -272,6 +277,8 @@ export default defineComponent({
 
     const response = ref(null);
     const responseStatus = ref(null);
+    const contentLength = ref(null);
+    const contentType = ref(null);
     const sendRequest = async () => {
       /* axios.get(requestToSend.value.url.value).then((resp) => {
         response.value = JSON.stringify(resp.data, null, 2);
@@ -283,6 +290,10 @@ export default defineComponent({
       store.commit(SET_FULL_REQUEST, apRes.config);
       response.value = apRes.res.data;
       responseStatus.value = apRes.res.status;
+      // eslint-disable-next-line prettier/prettier
+      contentLength.value = apRes.res.headers["content-length"];
+      // eslint-disable-next-line prettier/prettier
+      contentType.value = apRes.res.headers["content-type"];
     };
 
     return {
@@ -303,6 +314,8 @@ export default defineComponent({
       sendRequest,
       response,
       responseStatus,
+      contentLength,
+      contentType,
     };
   },
   /* computed: {

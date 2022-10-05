@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const getTests = async (apiNm) => {
+const getApiName = async () => {
   const baseUrl = process.env.VUE_APP_API_URL;
   const token = localStorage.getItem("accessToken");
 
   const config = {
     method: "get",
-    url: `${baseUrl}/tests?api_name=${apiNm}`,
+    url: `${baseUrl}/tests/apiname`,
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -23,4 +23,4 @@ const getTests = async (apiNm) => {
   return res.data;
 };
 
-export default getTests;
+export default getApiName;

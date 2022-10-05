@@ -3,7 +3,7 @@
   "info": {
     "description": "The Ownership API for the trivago Studio platform. The Ownership API keeps track of who can use what. More concrete which advertiser can use what application(s). This API allows you to create and manage these links between the advertisers and the applications. Moreover, this API keeps track of the link's changes and offers endpoints for listing the history of such links.The terms advertiser and organisation are the same thing, but advertiser is kept due to legacy reasons.\n\nThe endpoints listed below have implemented the authentication and authorization protocols of the trivago Studio platform. Therefore, it is required for all endpoints to have a JWT Token in the HTTP X-Studio-Authorization header using the Bearer Authentication scheme. For further information about the JWT token, please refer to the Studio client documentation.\n\nIn case errors may appear, like the 500's, this API describes them using the ErrorProblem Model.",
     "version": "1",
-    "title": "trivago Studio Ownership API"
+    "title": "testhahaha"
   },
   "host": "https://master.studio-sandbox.trv.cloud",
   "schemes": ["${HOSTED_ZONE_PROTOCOL}"],

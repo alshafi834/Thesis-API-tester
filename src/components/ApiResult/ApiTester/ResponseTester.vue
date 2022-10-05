@@ -1,24 +1,53 @@
 <template>
   <div class="mt-8">
-    <h2 class="border-b-2 p-1 mb-1">Automation tests:</h2>
+    <h2 class="border-b-2 p-1 mb-1 font-semibold text-lg">Automation tests:</h2>
     <div>
-      <p>Add a test</p>
+      <p class="p-1">Add a test</p>
     </div>
-    <div class="flex flex-row">
-      <select v-model="selectedTest" name="testOptions">
+    <div class="flex flex-row items-center">
+      <select
+        v-model="selectedTest"
+        name="testOptions"
+        class="border rounded mr-2 p-1"
+      >
         <option value="status">Status</option>
         <option value="contains">Contains</option>
         <option value="conLength">Content.length</option>
         <option value="conType">Content.type</option>
       </select>
       <span>Should be: </span>
-      <input v-model="selectedTestValue" type="text" />
-      <span class="cursor-pointer border p-1 ml-2" @click="createTest">+</span>
+      <input
+        v-model="selectedTestValue"
+        type="text"
+        class="border rounded p-1"
+      />
+      <span
+        class="cursor-pointer px-4 py-1 border rounded ml-2 bg-brand-blue-2 text-brand-gray-2"
+        @click="createTest"
+        >+</span
+      >
     </div>
-    <div v-if="automationTests.length > 0" class="mt-8">
-      <div v-for="test in automationTests" :key="test">
-        <p class="italic">
-          -> {{ Object.keys(test)[0] }} : {{ Object.values(test)[0] }}
+    <div class="flex flex-row">
+      <div v-if="automationTests.length > 0" class="mt-8 flex flex-col">
+        <div
+          v-for="(test, index) in automationTests"
+          :key="test"
+          class="flex flex-row py-2"
+        >
+          <p class="italic mr-2">
+            -> {{ Object.keys(test)[0] }} : {{ Object.values(test)[0] }}
+          </p>
+          <button
+            class="px-4 py-0 border rounded bg-brand-gray-3 text-brand-gray-2"
+            @click="removeTests(index)"
+          >
+            x
+          </button>
+        </div>
+      </div>
+      <div class="py-2 mt-6 ml-6">
+        <p v-for="msgs in failedMsgs" :key="msgs" class="py-2">
+          <span> {{ msgs === "Passed!" ? " ✅ " : "❌" }} {{ msgs }} </span>
         </p>
       </div>
     </div>
@@ -43,11 +72,11 @@
     <div v-if="passed">
       <p class="text-green-600">All test passed successfully!</p>
     </div>
-    <div v-if="!passed">
+    <!-- <div v-if="!passed">
       <p v-for="msgs in failedMsgs" :key="msgs" class="text-red-600">
         {{ msgs }}
       </p>
-    </div>
+    </div> -->
     <div
       v-if="passed"
       class="border-2 mt-6 p-6 flex justify-between bg-white items-center"
@@ -62,6 +91,7 @@
         />
       </div>
       <action-button text="Save test" @click="testSaver" />
+      <p v-if="created" class="text-green-400">Test created successfully!</p>
     </div>
   </div>
 </template>
@@ -84,6 +114,14 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    length: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     const selected = ref(null);
@@ -97,6 +135,7 @@ export default defineComponent({
     const checkStatus = (val) => {
       if (props.status === parseInt(val)) {
         testResult.value++;
+        failedMsgs.value.push("Passed!");
       } else {
         failedMsgs.value.push("Response status didnt match");
       }
@@ -105,19 +144,28 @@ export default defineComponent({
       console.log(containing.value);
       if (JSON.stringify(props.response).includes(val)) {
         testResult.value++;
+        failedMsgs.value.push("Passed!");
       } else {
         failedMsgs.value.push("Response doesn't contain this text");
       }
     };
+    const checkContentL = (val) => {
+      if (props.length === val) {
+        testResult.value++;
+        failedMsgs.value.push("Passed!");
+      } else {
+        failedMsgs.value.push("Content length didn't match");
+      }
+    };
+    const checkContentT = (val) => {
+      if (props.type === val) {
+        testResult.value++;
+        failedMsgs.value.push("Passed!");
+      } else {
+        failedMsgs.value.push("Content type didn't match");
+      }
+    };
     const checkTests = () => {
-      /* testResult.value = 0;
-      failedMsgs.value = [];
-      passed.value = false;
-      checkStatus();
-      checkResponse(props.response);
-      if (testResult.value === 2) {
-        passed.value = true;
-      } */
       testResult.value = 0;
       failedMsgs.value = [];
       passed.value = false;
@@ -125,6 +173,8 @@ export default defineComponent({
         let testName = Object.keys(t)[0];
         if (testName === "status") checkStatus(Object.values(t)[0]);
         else if (testName === "contains") checkResponse(Object.values(t)[0]);
+        else if (testName === "conLength") checkContentL(Object.values(t)[0]);
+        else if (testName === "conType") checkContentT(Object.values(t)[0]);
       }
       if (testResult.value === automationTests.value.length) {
         passed.value = true;
@@ -142,6 +192,7 @@ export default defineComponent({
     //const testNumber = ref([]);
     const store = useStore();
     const testName = ref("");
+    const created = ref(false);
     const testSaver = async () => {
       let body = {
         request: JSON.stringify(store.state.fullRequest),
@@ -150,7 +201,13 @@ export default defineComponent({
         api_name: store.state.apis.info.title,
       };
       const apRes = await saveTest(body);
+      created.value = true;
       console.log(apRes);
+    };
+
+    const removeTests = (idx) => {
+      automationTests.value.splice(idx, 1);
+      failedMsgs.value.splice(idx, 1);
     };
 
     return {
@@ -167,6 +224,8 @@ export default defineComponent({
       automationTests,
       testSaver,
       testName,
+      removeTests,
+      created,
     };
   },
 });

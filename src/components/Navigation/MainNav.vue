@@ -69,10 +69,10 @@ export default {
   data() {
     return {
       menuItems: [
-        { text: "Documentation", url: "/documentation" },
+        /* { text: "Documentation", url: "/documentation" }, */
         /* { text: "Jobs", url: "/jobs/results" }, */
         { text: "API Scanner", url: "/apiscanner" },
-        { text: "Apis", url: "/apis" },
+        /* { text: "Apis", url: "/apis" }, */
         { text: "My Tests", url: "/mytests" },
       ],
     };
